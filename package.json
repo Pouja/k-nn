@@ -1,11 +1,9 @@
 {
-    "name": "DecisionTree",
+    "name": "k-NN",
     "version": "1.0.0",
-    "description": "A decision tree algoritme written in node.",
-    "main": "src/app.js",
-    "scripts": {
-        "test": "NODE_ENV=test mocha -R spec -r should tests --recursive"
-    },
+    "description": "An implementation of k-NN.",
+    "main": "knn/app.js",
+    "scripts": {},
     "author": "Pouja Nikray",
     "license": "BSD-2-Clause",
     "dependencies": {
@@ -22,10 +20,7 @@
     },
     "devDependencies": {},
     "keywords": [
-        "decision",
-        "tree",
-        "higgs",
-        "continious",
-        "data"
+        "k-NN",
+        "node"
     ]
 }
