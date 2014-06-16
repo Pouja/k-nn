@@ -7,22 +7,20 @@ Reason for chosing Node as programming envorinmnent were:
 
 Unfortuantly as the adventure started with implementing id3 some problems were encountered.
  1. Hard memory limit of Node at 1.4gb
- 2. Not fast enough for high number of attributes (10+) and records (1M+)
+ 2. Not fast enough
 
-So for practical use, this solution will run perfectly and well for anything below 10 attributes and 1M records.
-Otherwise you will have to run this for a long time (5hours +) and you will probably hit the memory limit.
+So for practical use, this solution will run perfectly and well for anything below 10000 records.
+Otherwise you will have to run this for a long time (1hours +).
 
 ## Database
-Because the first implementation used a lot of database IO, specifically a lot of aggregation on records, MonetDB has been chosing to run with it. At the second implementation the database IO has been significally reduced, but I sticked with MonetDB.
-There is currently no direct implementation of using MonetDB with Node, so ODBC is the connection link between the two.
-Under \common you will find the database class which can easily be replaced with mysql/postgresql solution.
+Under \common you will find the database class which can easily be replaced with mysql/postgresql solution. The current implementation uses ODBC bindings
 
 ## Config File
 Under \config you will the config file with already a given connection string for using ODBC.
 Furthermore you will find there other data that can be given.
  * table: the name of the table where all the data is stored
- * createStartId/createEndId: range of data that is allowed to be used for training the decision tree
- * testStartId/testEndId: range of data that is allowed to be used for testing the decision tree
+ * createStartId/createEndId: range of data that is allowed to be used for training the k-NN
+ * testStartId/testEndId: range of data that is allowed to be used for testing the k-NN
  * bulk: maximum amount of records that is allowed to be fetched in 1 query.
  * stopCriteria: the amount of records that a node can have to become a leaf node.
 
@@ -32,47 +30,11 @@ Debug module is used, see [link](https://github.com/visionmedia/debug)
 ## Install
 Run `npm install`
 
-## Creating Decision Tree
-Run `DEUBG=* node createdt/app.js outputfilename attributefile`
-The outputfilename is the name and or location where you want to place the decision tree. This file will be used for testing the decision tree as well.
-The attributefile is a list of attribute with properties:
- * type - either disc for discrete values or 
- * name - name of the attribute, should match with the database column
- * numberSplits - the number of times a continious attribute should be split
- * (optional) split - an array of strings if type is disc or array of {min, max} if the type is cont
-
-Example:
-```javascript
-[{
-    "name": "attr1",
-    "type": "cont",
-    "numberSplits": 4
-  },
-  {
-    "name": "attr2",
-    "type": "cont",
-    "split":{
-      "min": 0,
-      "max": 8
-    },{
-      "min": 9,
-      "max": 11
-    }
-  },
-  {
-    "name": "outlook",
-    "type": "disc"
-}]
-```
-## Future Work
- * Improve the application by using multiple cores
- * Create more tests
- * Change set.js by using prototype instead of closure
-
-## Testing Decision Tree
-Run `DEBUG=* node testdt/app.js outputfilename attributefilename inputfilename`
-
-The inputfilename should match the filename where the decision tree is stored from createdt/app.js. The outputfile will contain the number of mismatches.
+## Running
+Run `DEUBG=* node knn/app.js k p`
+Where k is the number of closest points that should be used to classify an entry. And p is the value for the Minoswki Distance function.
+Only p=0,1,2 can be used.
+In the console it will output the number of mismatches.
 
 license
 -------
